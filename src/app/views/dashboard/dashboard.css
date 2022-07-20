@@ -1,0 +1,122 @@
+.funt__row {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+.funct_name {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 27px;
+
+    color: #000d1a;
+
+    opacity: 0.6;
+}
+.funct_count {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 48px;
+
+    /* identical to box height */
+
+    /* Black */
+    color: #172b3e;
+}
+.funct_icon_cont {
+    height: 28px;
+    height: 28px;
+}
+.funct_icon {
+    height: 100%;
+    width: 100%;
+}
+
+.funct_content {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 18px;
+
+    color: #000000;
+}
+
+.funct_details_btn {
+    font-family: 'DM Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+
+    /* identical to box height, or 143% */
+
+    /* Colors / Action / Primary */
+    color: #4339f2 !important;
+    margin-top: 10px;
+}
+
+.edit_delete_div {
+    display: flex;
+    flex-direction: row;
+    /* background-color: #4339f2; */
+}
+
+.table_header {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 19px;
+
+    color: #000000;
+}
+
+.css-10hd2wm-MuiTableCell-root {
+    font-weight: 600;
+}
+
+.css-1fqn4f-MuiTableCell-root {
+}
+
+.css-1q1u3t4-MuiTableRow-root:nth-child(odd) {
+    background-color: #f7f6fe;
+}
+.tableRow {
+    background-color: red;
+    /* "&$hover:hover": {
+      backgroundColor: "blue"
+    } */
+}
+
+.css-1vaeti2-MuiPaper-root {
+    box-shadow: none !important;
+}
+
+.css-1scr8os {
+    /* background-color: white; */
+}
+
+.api_Pg_header{
+    font-family: 'Poppins';
+font-style: normal;
+font-weight: 600;
+font-size: 20px;
+line-height: 30px;
+
+/* identical to box height */
+
+color: #000000;
+
+opacity: 0.8;
+
+}

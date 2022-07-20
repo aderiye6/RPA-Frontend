@@ -1,0 +1,14 @@
+
+
+.robomotion_color_bg{
+    background-color: rgb(50, 81, 112);
+    height: 100vh;
+}
+
+
+@media screen and (max-width: 525px) {
+    .robomotion_color_bg{
+        /* background-color: rgb(50, 81, 112); */
+        height: 40vh;
+    }
+}

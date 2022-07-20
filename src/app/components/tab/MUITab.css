@@ -1,0 +1,9 @@
+.MuiAppBar-colorPrimary {
+    color: #369FFF !important;
+    background-color:  white !important;
+}
+
+.MuiBox-root-5 {
+    padding: 0px !important;
+    padding-top: 2rem !important;
+}

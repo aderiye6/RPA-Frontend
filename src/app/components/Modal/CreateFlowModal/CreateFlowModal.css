@@ -1,0 +1,63 @@
+.modal_body{
+    position: fixed; /* Stay in place */
+  z-index: 200000000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 1000rem; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+
+}
+
+.modal_content_flow{
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: max-content; /* Could be more or less, depending on screen size */
+  /* overflow: scroll; */
+}
+
+.modal__title{
+  font-family: 'Manrope';
+font-style: normal;
+font-weight: 600;
+font-size: 13px;
+line-height: 20px;
+}
+.create_robot_top_bar{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+}
+
+.create_robot_body{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 10px;
+  justify-content: space-between;
+}
+
+
+.create_robot_div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.create_robot_btn{
+padding: .5rem 1rem;
+font-size: 14px;
+
+/* Blue */
+background: #369FFF;
+border-radius: 8px;
+margin-top: 1rem;
+color: white;
+}

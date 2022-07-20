@@ -1,0 +1,14 @@
+.user_console_wrapper{
+    background-color: #ffffff;
+    height: 100%;
+    
+}
+
+.user_console_body{
+    /* margin-top: 10rem; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: 2px solid red; */
+    height: 100%;
+}

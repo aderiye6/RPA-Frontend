@@ -1,0 +1,18 @@
+.tutorial_wrapper{
+    height: 100%;
+    /* border: 2px solid red; */
+    padding: 1rem 4rem;
+    /* padding-top: 50rem; */
+    /* height: 600px; */
+}
+
+
+.tutorial_accordion_subtitle{
+    font-size: 20px;
+    color: #777;
+}
+
+.tutorial_accordion_body{
+    font-size: 15px;
+    color: #777;
+}

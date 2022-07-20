@@ -1,0 +1,10 @@
+.console_layout{
+    background-color: #ccc;
+    position: fixed;
+    width: 100%;
+    z-index: 100000;
+}
+.main_selection_menu_div{
+    padding-left: 1rem;
+    /* background-color: red; */
+}

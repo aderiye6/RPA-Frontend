@@ -1,0 +1,117 @@
+import Layout1Topbar from 'app/components/MatxLayout/Layout1/Layout1Topbar'
+
+import { MatxSuspense } from 'app/components'
+import Layout1Sidenav from 'app/components/MatxLayout/Layout1/Layout1Sidenav'
+import Scrollbar from 'react-perfect-scrollbar'
+import useSettings from 'app/hooks/useSettings'
+import { styled, Box, useTheme } from '@mui/system'
+import React, { useEffect, useRef, useState } from 'react'
+import { ThemeProvider, useMediaQuery } from '@mui/material'
+import SidenavTheme from 'app/components/MatxTheme/SidenavTheme/SidenavTheme'
+import SecondarySidebar from 'app/components/SecondarySidebar/SecondarySidebar'
+import { sidenavCompactWidth, sideNavWidth } from 'app/utils/constant'
+import { Outlet, Route, Routes } from 'react-router-dom'
+import SlidingPanel from 'react-sliding-side-panel'
+import WorkSpace from '../WorkSpace/WorkSpace'
+import RoboProject from '../RoboProject/RoboProject'
+
+const Layout1Root = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    background: theme.palette.background.default,
+}))
+
+const ContentBox = styled(Box)(() => ({
+    height: '100%',
+    display: 'flex',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+}))
+
+const StyledScrollBar = styled(Scrollbar)(() => ({
+    height: '100%',
+    position: 'relative',
+    display: 'flex',
+    flexGrow: '1',
+    flexDirection: 'column',
+}))
+
+const LayoutContainer = styled(Box)(({ width, secondarySidebar }) => ({
+    height: '100vh',
+    display: 'flex',
+    flexGrow: '1',
+    flexDirection: 'column',
+    verticalAlign: 'top',
+    marginLeft: width,
+    position: 'relative',
+    overflow: 'hidden',
+    transition: 'all 0.3s ease',
+    marginRight: secondarySidebar.open ? 50 : 0,
+}))
+
+export default function FlowDesigner() {
+    const { settings, updateSettings } = useSettings()
+    const { layout1Settings, secondarySidebar } = settings
+    const topbarTheme = settings.themes[layout1Settings.topbar.theme]
+    const {
+        leftSidebar: { mode: sidenavMode, show: showSidenav },
+    } = layout1Settings
+
+    const [openPanel, setOpenPanel] = useState(false)
+    const [quickbetDrawerText, setquickbetDrawerText] =
+        useState('OPEN QUICK BET')
+    const [showConsole, setshowConsole] = useState(false)
+
+    const getSidenavWidth = () => {
+        switch (sidenavMode) {
+            case 'full':
+                return sideNavWidth
+            case 'compact':
+                return sidenavCompactWidth
+            default:
+                return '0px'
+        }
+    }
+
+    const sidenavWidth = getSidenavWidth()
+    const theme = useTheme()
+    const isMdScreen = useMediaQuery(theme.breakpoints.down('md'))
+
+    const ref = useRef({ isMdScreen, settings })
+    const layoutClasses = `theme-${theme.palette.type}`
+
+    useEffect(() => {
+        let { settings } = ref.current
+        let sidebarMode = settings.layout1Settings.leftSidebar.mode
+        if (settings.layout1Settings.leftSidebar.show) {
+            let mode = isMdScreen ? 'close' : sidebarMode
+            updateSettings({ layout1Settings: { leftSidebar: { mode } } })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMdScreen])
+    return (
+        <div>
+            {layout1Settings.topbar.show && layout1Settings.topbar.fixed && (
+                <ThemeProvider theme={topbarTheme}>
+                    <Layout1Topbar fixed={true} className="elevation-z8" />
+                </ThemeProvider>
+            )}
+
+            <Layout1Root className={layoutClasses}>
+                {showSidenav && sidenavMode !== 'close' && (
+                    <SidenavTheme>
+                        <Layout1Sidenav />
+                    </SidenavTheme>
+                )}
+
+                <LayoutContainer
+                    width={sidenavWidth}
+                    secondarySidebar={secondarySidebar}
+                >
+                    <RoboProject />
+                </LayoutContainer>
+            </Layout1Root>
+        </div>
+    )
+}
