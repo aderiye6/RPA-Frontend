@@ -3,7 +3,6 @@ var version = '1.0'
 
 //show popup page while click icon
 chrome.action.onClicked.addListener(function (tab) {
-    console.log(tab, 'tabb')
     chrome.debugger.attach(
         { tabId: tab.id },
         version,
@@ -12,11 +11,10 @@ chrome.action.onClicked.addListener(function (tab) {
 })
 
 chrome.debugger.onEvent.addListener(function (source, method, params) {
-    console.log(source, method, params, 'called huj')
+    console.log(source, method, params, 'huj')
 })
 
 function onAttach(tabId) {
-    console.log(tabId, 'sjskjsjsjsjks')
     if (chrome.runtime.lastError) {
         alert(chrome.runtime.lastError.message)
         return
@@ -30,8 +28,6 @@ function onAttach(tabId) {
     })
 }
 
-console.log(chrome, 'kkk')
-
 chrome.runtime.onMessage.addListener(function (
     message,
     sender,
@@ -44,19 +40,18 @@ chrome.runtime.onMessage.addListener(function (
         contentColor: { r: 155, g: 11, b: 239, a: 0.7 },
     }
 
-    console.log(message, sender, senderResponse, 'jaweeeee')
 
     chrome.debugger.attach({ tabId: tabId }, '1.0', function () {
         chrome?.debugger?.sendCommand({ tabId: tabId }, 'DOM.enable')
         chrome?.debugger?.sendCommand({ tabId: tabId }, 'Overlay.enable')
         chrome?.debugger?.onEvent?.addListener(onEvent)
-        
+
         chrome.debugger.sendCommand(
             { tabId: tabId },
             'Overlay.setInspectMode',
             { mode: 'searchForNode', highlightConfig: hightCfg },
             function (result) {
-                console.log(result, 'it was God who did it')
+                console.log(result, 'UPDATE')
             }
         )
 
@@ -72,38 +67,27 @@ chrome.runtime.onMessage.addListener(function (
             }
         )
 
-
-        window.addEventListener("unload", function() {
-            chrome.debugger.detach({tabId:tabId});
-          });
+        window.addEventListener('unload', function () {
+            chrome.debugger.detach({ tabId: tabId })
+        })
 
         chrome.debugger.onEvent.addListener(function (source, method, params) {
             console.log(source, method, params, 'called ming')
         })
-        
-        
 
         function onEvent(debuggeeId, message, params) {
             console.log('onEvent ...' + message, params)
             if (tabId != debuggeeId.tabId) return
-        
+
             if (message == 'Network.inspectNodeRequested') {
-                console.log('jodssddsiosdiosdois')
+                console.log('didupdate')
                 //do something..
             }
         }
     })
     if (message.name === 'message') {
-        console.log('Petter message')
         senderResponse({ text: 'Petter Joe', sender })
-        console.log('kingshshg')
-        fetch('https://some-random-api.ml/img/pikachu')
-            .then((response) => response.text())
-            .then((data) => {
-                let dataObj = JSON.parse(data)
-                senderResponse({ data: dataObj, index: message.index })
-            })
-            .catch((error) => console.log('error', error))
-        return true // Will respond asynchronously.
+
+        return true 
     }
 })

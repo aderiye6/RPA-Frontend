@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    ROBOMOTION GUT
-    <div id="container">
-        <button id="btn_inspect">select node</button>
-    </div>
-   
-    <script src="popup.js"></script>
-    <script src="background.js"></script>
-    <script src="./popup.js"></script>
-    <script src="./background.js"></script>
-   
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <style>
+        #container{
+            display: flex;
+        }
+        #robo_text{
+            text-decoration: underline;
+        }
+    </style>
+    <body>
+        ROBOMOTION
+        <div id="container">
+            <div>
+                <img src="./logo.png" alt="Logo" />
+            </div>
+            <div id="robo_text">How to Use</div>
+        </div>
+
+        <script src="popup.js"></script>
+        <script src="background.js"></script>
+        <script src="./popup.js"></script>
+        <script src="./background.js"></script>
+    </body>
 </html>
