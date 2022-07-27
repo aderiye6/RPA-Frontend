@@ -1,34 +1,12 @@
 /*global chrome*/
 var version = '1.0'
 
-//show popup page while click icon
-chrome.action.onClicked.addListener(function (tab) {
-    chrome.debugger.attach(
-        { tabId: tab.id },
-        version,
-        onAttach.bind(null, tab.id)
-    )
-})
-
 chrome.debugger.onEvent.addListener(function (source, method, params) {
     console.log(source, method, params, 'huj')
 })
 
-function onAttach(tabId) {
-    if (chrome.runtime.lastError) {
-        alert(chrome.runtime.lastError.message)
-        return
-    }
 
-    chrome.windows.create({
-        url: 'headers.html?' + tabId,
-        type: 'popup',
-        width: 800,
-        height: 600,
-    })
-}
-
-chrome.runtime.onMessage.addListener(function (
+chrome?.runtime?.onMessage?.addListener(function (
     message,
     sender,
     senderResponse
@@ -40,11 +18,64 @@ chrome.runtime.onMessage.addListener(function (
         contentColor: { r: 155, g: 11, b: 239, a: 0.7 },
     }
 
+    function onEvent(debuggeeId, message, params) {
+        if (tabId != debuggeeId.tabId) return
 
-    chrome.debugger.attach({ tabId: tabId }, '1.0', function () {
-        chrome?.debugger?.sendCommand({ tabId: tabId }, 'DOM.enable')
-        chrome?.debugger?.sendCommand({ tabId: tabId }, 'Overlay.enable')
+        if (message == 'Network.inspectNodeRequested') {
+            console.log('didupdate')
+            //do something..
+        }
+    }
+
+   
+    chrome?.debugger?.attach({ tabId: tabId }, '1.0', function () {
+        chrome?.debugger?.sendCommand(
+            { tabId: tabId },
+            'DOM.enable',
+            function () {
+                console.log('Result:', arguments)
+            }
+        )
+        chrome?.debugger?.sendCommand(
+            { tabId: tabId },
+            'DOM.setInspectedNode',
+            function () {
+                console.log('Result:', arguments)
+            }
+        )
+        chrome?.debugger?.sendCommand(
+            { tabId: tabId },
+            'DOM.requestNode',
+            function () {
+                console.log('Result:', arguments)
+            }
+        )
+        chrome?.debugger?.sendCommand(
+            { tabId: tabId },
+            'Overlay.enable',
+            function () {
+                console.log('Result:', arguments)
+            }
+        )
         chrome?.debugger?.onEvent?.addListener(onEvent)
+
+        chrome.debugger.sendCommand(
+            { tabId: tabId },
+            'Overlay.setInspectMode',
+            { mode: 'searchForNode', highlightConfig: hightCfg },
+            function (result) {
+                console.log(result, 'UPDATE')
+            }
+        )
+
+        chrome.debugger.sendCommand(
+            { tabId: tabId },
+            'DOM.setInspectedNode',
+            { mode: 'searchForNode', highlightConfig: hightCfg },
+            function (result) {
+                console.log(result, 'kolio')
+            }
+        )
 
         chrome.debugger.sendCommand(
             { tabId: tabId },
@@ -67,6 +98,20 @@ chrome.runtime.onMessage.addListener(function (
             }
         )
 
+        chrome.debugger.sendCommand(
+            { tabId: tabId },
+            'Runtime.evaluate',
+            {
+                expression:
+                    'console.log(document.body)',
+            },
+            function () {
+                console.log('Result:', arguments)
+            }
+        )
+
+        chrome?.debugger?.onEvent?.addListener(onEvent)
+
         window.addEventListener('unload', function () {
             chrome.debugger.detach({ tabId: tabId })
         })
@@ -74,20 +119,10 @@ chrome.runtime.onMessage.addListener(function (
         chrome.debugger.onEvent.addListener(function (source, method, params) {
             console.log(source, method, params, 'called ming')
         })
-
-        function onEvent(debuggeeId, message, params) {
-            console.log('onEvent ...' + message, params)
-            if (tabId != debuggeeId.tabId) return
-
-            if (message == 'Network.inspectNodeRequested') {
-                console.log('didupdate')
-                //do something..
-            }
-        }
     })
     if (message.name === 'message') {
         senderResponse({ text: 'Petter Joe', sender })
 
-        return true 
+        return true
     }
 })

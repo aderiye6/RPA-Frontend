@@ -80,7 +80,7 @@ chrome?.runtime?.sendMessage({ name: 'message' }, (response) => {
 })
 
 function onEvent(debuggeeId, message, params) {
-    console.log('onEvent ...' + message)
+   
     if (tabId != debuggeeId.tabId) return
 
     if (message == 'Network.inspectNodeRequested') {
