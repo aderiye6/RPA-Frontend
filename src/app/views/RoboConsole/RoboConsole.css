@@ -375,3 +375,15 @@ ul li:hover {
     position: relative !important;
 }
 
+.robo_flow_node{
+
+    display: flex;
+    column-gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 100px;
+    border: 2px solid #ccc;
+    background-color: #ffffff;
+    padding: 2px 1rem;
+}
+

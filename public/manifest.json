@@ -1,15 +1,28 @@
 {
-  "short_name": "React App",
   "name": "Create React App Sample",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "description": "Build an Extension!",
+  "version": "1.0",
+  "manifest_version": 3,
+  "devtools_page": "index.html",
+  "action":{
+    "default_popup": "popup.html",
+    "default_title": "the popup"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["popup.js"]
+  }],
+  "permissions": ["scripting", "debugger", "tabs", "activeTab", "contextMenus", "storage",  "tabs",  "activeTab"],
+
+  "host_permissions":[
+    "https://*/*",
+    "http://*/*",
+    "<all_urls>"
+  ]
 }
+
+

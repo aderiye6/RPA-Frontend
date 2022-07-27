@@ -3,9 +3,10 @@ import { Colors } from './Colors'
 import Scrollbar from 'react-perfect-scrollbar'
 import useSettings from 'app/hooks/useSettings'
 import { styled, Box, useTheme } from '@mui/system'
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { ColorPicker, useColor } from 'react-color-palette'
 import 'react-color-palette/lib/css/styles.css'
+import { Handle, Position } from 'react-flow-renderer';
 import ReactFlow, {
     ReactFlowProvider,
     addEdge,
@@ -59,6 +60,7 @@ import { ActionTypes } from '@mui/base'
 import { useBlocker, useNavigate } from 'react-router-dom'
 import { Blocker } from 'history'
 import FlowConsoleArea from './FlowConsoleArea'
+import { MoreVertOutlined } from '@material-ui/icons'
 
 const flowKey = 'example-flow'
 
@@ -128,7 +130,8 @@ const options = [
 const initialNodes = [
     {
         id: '1',
-        type: 'default',
+        // type: 'default',
+        type: 'textUpdater',
         // data: { label: 'input node' },
         data: { label: 'Initial' },
         position: { x: 250, y: 5 },
@@ -137,6 +140,10 @@ const initialNodes = [
 
 let id = 0
 const getId = () => `dndnode_${id++}`
+const handleStyle = { left: 10 };
+
+
+
 
 ////////left bar DND///////////
 
@@ -244,6 +251,31 @@ export default function RoboConsole() {
     const [reactFlowInstance, setReactFlowInstance] = useState(null)
     const [selectedNodeID, setselectedNodeID] = useState()
     const { setViewport } = useReactFlow()
+
+
+    function TextUpdaterNode({ data }) {
+
+        console.log(data, 'helppppppppppppp')
+        const onClick = useCallback((evt) => {
+          console.log(evt?.target?.value, 'jimmmm');
+        }, []);
+      
+        return (
+          <>
+            {/* <Handle type="target" position={Position.Left} /> */}
+            <Handle type="target" position={Position.Top} />
+            <div className='robo_flow_node'>
+                <div><label htmlFor="text">{data?.label}</label></div>
+                <div onClick={onClick}><MoreVertOutlined/> </div>
+             
+            </div>
+            <Handle type="source" position={Position.Bottom} id="a" />
+            {/* <Handle type="source" position={Position.Bottom} id="b" style={handleStyle} /> */}
+          </>
+        );
+      }
+
+const nodeTypes = useMemo(() => ({ textUpdater: TextUpdaterNode }), []);
 
     useEffect(() => {
         if (optionsContainers.current.length !== 0) {
@@ -400,7 +432,7 @@ export default function RoboConsole() {
             })
             const newNode = {
                 id: getId(),
-                type,
+                type: 'textUpdater',
                 position,
                 data: {
                     label: `${label}`,
@@ -1158,6 +1190,7 @@ export default function RoboConsole() {
                                             ref={reactFlowWrapper}
                                         >
                                             <ReactFlow
+                                                nodeTypes={nodeTypes}
                                                 zoomOnScroll={false}
                                                 nodes={nodes}
                                                 edges={edges}
