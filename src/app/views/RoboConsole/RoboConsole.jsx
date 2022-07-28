@@ -1,12 +1,19 @@
+/*global chrome*/
 import Layout1Topbar from 'app/components/MatxLayout/Layout1/Layout1Topbar'
 import { Colors } from './Colors'
 import Scrollbar from 'react-perfect-scrollbar'
 import useSettings from 'app/hooks/useSettings'
 import { styled, Box, useTheme } from '@mui/system'
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+// import Popover from '@mui/material/Popover'
+// import Button from '@material-ui/core/Button';
+// import Button from '@mui/material/Button'
+// import Typography from '@mui/material/Typography';
+import { Button, Popover } from 'antd'
 import { ColorPicker, useColor } from 'react-color-palette'
 import 'react-color-palette/lib/css/styles.css'
-import { Handle, Position } from 'react-flow-renderer';
+import { Handle, Position } from 'react-flow-renderer'
 import ReactFlow, {
     ReactFlowProvider,
     addEdge,
@@ -39,7 +46,7 @@ import {
     retrieveFlowData,
     saveFlowData,
 } from 'app/AppServices/apiService/Services'
-import { Button } from 'antd'
+// import { Button } from 'antd'
 import {
     Add,
     KeyboardArrowDown,
@@ -61,8 +68,15 @@ import { useBlocker, useNavigate } from 'react-router-dom'
 import { Blocker } from 'history'
 import FlowConsoleArea from './FlowConsoleArea'
 import { MoreVertOutlined } from '@material-ui/icons'
+import Loader from 'app/components/Loadable/Loader'
 
 const flowKey = 'example-flow'
+
+const useStyles = makeStyles((theme) => ({
+    typography: {
+        padding: theme.spacing(2),
+    },
+}))
 
 const Accordion = styled((props) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -118,6 +132,24 @@ const style = {
     paddingBottom: '2rem',
 }
 
+const extensionStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    height: 'max-content',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    borderTopLeftRadius: '10px',
+    borderTopRightRadius: '10px',
+    display: 'flex',
+    // overflow: 'scroll',
+    flexDirection: 'column',
+    padding: '3rem',
+}
+
 const options = [
     { name: 'option_1', key: 1 },
     { name: 'option_2', key: 2 },
@@ -140,10 +172,7 @@ const initialNodes = [
 
 let id = 0
 const getId = () => `dndnode_${id++}`
-const handleStyle = { left: 10 };
-
-
-
+const handleStyle = { left: 10 }
 
 ////////left bar DND///////////
 
@@ -155,6 +184,7 @@ const onDragStart = (event, nodeType, label) => {
 ////////////END DEN .////////////////////
 
 export default function RoboConsole() {
+    const classes = useStyles()
     const [formData, setformData] = useState({})
     const [color, setColor] = useColor('hex', '#12991212')
     const [showPalette, setshowPalette] = useState(false)
@@ -182,6 +212,8 @@ export default function RoboConsole() {
     const inputContainers = useRef([])
 
     const [openColorModal, setopenColorModal] = useState(false)
+
+    const [openBroswerExtension, setopenBroswerExtension] = useState(false)
     const { settings, updateSettings } = useSettings()
     const { layout1Settings, secondarySidebar } = settings
     const topbarTheme = settings.themes[layout1Settings.topbar.theme]
@@ -205,6 +237,10 @@ export default function RoboConsole() {
     }
     const handleClose = () => {
         setopenColorModal(false)
+    }
+
+    const ExtensionClose = () => {
+        setopenBroswerExtension(false)
     }
 
     //////ACORDION
@@ -244,6 +280,22 @@ export default function RoboConsole() {
 
     useEffect(() => {}, [commonObject])
 
+    ///////////// POPOVER ////////////////////////
+    // const [anchorEl, setAnchorEl] =
+    //     (React.useState < HTMLButtonElement) | (null > null)
+    const [anchorEl, setAnchorEl] = useState(null)
+
+    const handlePopOverClick = (event) => {
+        setAnchorEl(event.currentTarget)
+    }
+
+    const handlePopOverClose = () => {
+        setAnchorEl(null)
+    }
+
+    const open = Boolean(anchorEl)
+    const popid = open ? 'simple-popover' : undefined
+
     //////////////DND /////////////////////////////////////
     const reactFlowWrapper = useRef(null)
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
@@ -252,30 +304,117 @@ export default function RoboConsole() {
     const [selectedNodeID, setselectedNodeID] = useState()
     const { setViewport } = useReactFlow()
 
+    const inspectElementExtension = () => {
+        setopenBroswerExtension(true)
+
+        // The ID of the extension we want to talk to.
+        var editorExtensionId = 'abcdefghijklmnoabcdefhijklmnoabc'
+
+        // Make a simple request:
+        chrome.runtime.sendMessage(
+            editorExtensionId,
+            { openUrlInEditor: 'open' },
+            function (response) {
+                if (!response.success) console.log('error')
+            }
+        )
+    }
+
+    const content = (
+        <div className="elementOverCont">
+            <div
+                className="elementOver"
+                onClick={() => inspectElementExtension()}
+            >
+                Inspect Element
+            </div>
+            <div className="elementOver">Hide Preview</div>
+        </div>
+    )
 
     function TextUpdaterNode({ data }) {
-
         console.log(data, 'helppppppppppppp')
-        const onClick = useCallback((evt) => {
-          console.log(evt?.target?.value, 'jimmmm');
-        }, []);
-      
-        return (
-          <>
-            {/* <Handle type="target" position={Position.Left} /> */}
-            <Handle type="target" position={Position.Top} />
-            <div className='robo_flow_node'>
-                <div><label htmlFor="text">{data?.label}</label></div>
-                <div onClick={onClick}><MoreVertOutlined/> </div>
-             
-            </div>
-            <Handle type="source" position={Position.Bottom} id="a" />
-            {/* <Handle type="source" position={Position.Bottom} id="b" style={handleStyle} /> */}
-          </>
-        );
-      }
+        const handlePopOverClick = useCallback((evt) => {
+            console.log(evt, 'jimmmm')
+            setAnchorEl(true)
+        }, [])
 
-const nodeTypes = useMemo(() => ({ textUpdater: TextUpdaterNode }), []);
+        return (
+            <>
+                {/* <Handle type="target" position={Position.Left} /> */}
+                {data?.label === 'Click Element' && (
+                    <>
+                        {' '}
+                        <Handle type="target" position={Position.Top} />
+                        <div className="robo_flow_node">
+                            <div>
+                                <label htmlFor="text">{data?.label}</label>
+                            </div>
+                            <Popover content={content} title="">
+                                <div type="">
+                                    <MoreVertOutlined />
+                                </div>
+                            </Popover>
+                            {/* <Button
+                                aria-describedby={popid}
+                                variant="contained"
+                                color="primary"
+                                onClick={handlePopOverClick}
+                            >
+                                Open Popover
+                            </Button>
+                            <Popover
+                                id={popid}
+                                open={open}
+                                anchorEl={anchorEl}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'center',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'center',
+                                }}
+                            >
+                                <Typography className={classes.typography}>
+                                    The content of the Popover.
+                                </Typography>
+                            </Popover> */}
+                        </div>
+                        <Handle
+                            type="source"
+                            position={Position.Bottom}
+                            id="a"
+                        />
+                    </>
+                )}
+
+                {data?.label !== 'Click Element' && (
+                    <>
+                        <Handle type="target" position={Position.Top} />
+                        <div className="robo_flow_node">
+                            <div>
+                                <label htmlFor="text">{data?.label}</label>
+                            </div>
+                            {/* <div onClick={onClick}>
+                                <MoreVertOutlined />{' '}
+                            </div> */}
+                        </div>
+                        <Handle
+                            type="source"
+                            position={Position.Bottom}
+                            id="a"
+                        />
+                    </>
+                )}
+
+                {/* <Handle type="source" position={Position.Bottom} id="b" style={handleStyle} /> */}
+            </>
+        )
+    }
+
+    const nodeTypes = useMemo(() => ({ textUpdater: TextUpdaterNode }), [])
 
     useEffect(() => {
         if (optionsContainers.current.length !== 0) {
@@ -527,7 +666,6 @@ const nodeTypes = useMemo(() => ({ textUpdater: TextUpdaterNode }), []);
         }
     }
     useEffect(() => {
-        // window.location.reload()
         window.onbeforeunload = () =>
             "If you leave this page, you'll also leave the call"
         getFlowData(true)
@@ -2137,6 +2275,53 @@ const nodeTypes = useMemo(() => ({ textUpdater: TextUpdaterNode }), []);
                     </Modal>
                 </div>
             </ThemeProvider>
+            {/* ////// extension modal */}
+            <Modal
+                open={openBroswerExtension}
+                onClose={ExtensionClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={extensionStyle}>
+                    <div>
+                        <h2>Waiting Inspect</h2>
+                    </div>
+                    <div>
+                        <p>
+                            Web Inspect mode has been activated. You can now
+                            open a new browser tab or go to an existing tab to
+                            inspect a web element.
+                        </p>
+                        <p>
+                            Just click left mouse button to inspect an element.
+                            The browser will return to Flow Designer.
+                        </p>
+                        <p>
+                            If Ctrl key is pressed while clicking, this will
+                            open advanced XPath editor.
+                        </p>
+                    </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            margin: '1rem',
+                        }}
+                    >
+                        <Loader />
+                    </div>
+                    <div
+                        style={{ display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                        <Button
+                            style={{ width: 'max-content', cursor: 'pointer' }}
+                            onClick={() => setopenBroswerExtension(false)}
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </Box>
+            </Modal>
         </div>
     )
 }

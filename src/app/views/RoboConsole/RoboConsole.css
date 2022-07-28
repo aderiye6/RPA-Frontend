@@ -386,4 +386,15 @@ ul li:hover {
     background-color: #ffffff;
     padding: 2px 1rem;
 }
+.elementOverCont{
+    padding:0;
+    border: 2px solid red;
+}
 
+.elementOver:hover{
+    background-color: #6c757d;
+}
+
+.ant-popover-open{
+padding: 0 !important;
+}
