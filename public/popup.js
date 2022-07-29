@@ -87,3 +87,25 @@ function onEvent(debuggeeId, message, params) {
         console.log('update element')
     }
 }
+
+
+
+window.addEventListener('message', (event) => {
+    // Only accept messages from the same frame
+    console.log(event, 'workingDeaddd')
+    if (event.source !== window) {
+        return
+    }
+
+    var message = event.data
+
+    // Only accept messages that we know are ours
+    if (
+        typeof message !== 'object' ||
+        message === null ||
+        (!!message.source && message.source !== 'dataaccessgateway-agent')
+    ) {
+        return
+    }
+    chrome.runtime.sendMessage(message)
+})

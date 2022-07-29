@@ -27,7 +27,11 @@
     "<all_urls>"
   ],
   "externally_connectable": {
-    "matches": ["https://*.example.com/*", "*://localhost/*"]
+    "ids": [
+      "jkpbbgjldgddpglnmfpkgmjfeefhpbld",
+      "*"
+    ],
+    "matches": ["https://*.example.com/*", "*://localhost/*", "http://localhost:3000/*", "http://*.localhost:3000/*"]
   }
 }
 

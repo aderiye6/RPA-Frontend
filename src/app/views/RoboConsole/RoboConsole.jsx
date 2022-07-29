@@ -304,20 +304,38 @@ export default function RoboConsole() {
     const [selectedNodeID, setselectedNodeID] = useState()
     const { setViewport } = useReactFlow()
 
+
+
     const inspectElementExtension = () => {
         setopenBroswerExtension(true)
 
         // The ID of the extension we want to talk to.
         var editorExtensionId = 'abcdefghijklmnoabcdefhijklmnoabc'
+        console.log(chrome,window, 'chromechromechrome')
+        console.log(window.chrome.runtime, 'sssjs')
+        window.postMessage({ type: "FROM_PAGE", text: "Hello from the webpage!" }, "*");
+        window.postMessage({ source: "dataaccessgateway-agent", payload: "requestInfo" }, "*");
+        // if(chrome && chrome.runtime && chrome.runtime.sendMessage) {
+        //     chrome.runtime.sendMessage(
+        //       "abcdefghijklmnoabcdefhijklmnoabc",
+        //       {greeting: "yes"},
+        //       function (response) {
+        //         console.log(response, 'dkldls')
+        //         if (!response.success) console.log('error')
+        //     }
+        //     );
+        //   }
 
         // Make a simple request:
-        chrome.runtime.sendMessage(
-            editorExtensionId,
-            { openUrlInEditor: 'open' },
-            function (response) {
-                if (!response.success) console.log('error')
-            }
-        )
+
+        // chrome.runtime.sendMessage(
+        //     editorExtensionId,
+        //     { openUrlInEditor: 'open' },
+        //     function (response) {
+        //         console.log(response, 'dkldls')
+        //         if (!response.success) console.log('error')
+        //     }
+        // )
     }
 
     const content = (
@@ -333,7 +351,7 @@ export default function RoboConsole() {
     )
 
     function TextUpdaterNode({ data }) {
-        console.log(data, 'helppppppppppppp')
+        // console.log(data, 'helppppppppppppp')
         const handlePopOverClick = useCallback((evt) => {
             console.log(evt, 'jimmmm')
             setAnchorEl(true)

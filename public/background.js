@@ -28,6 +28,39 @@ function onAttach(tabId) {
     })
 }
 
+window.addEventListener('message', (event) => {
+    // Only accept messages from the same frame
+    console.log(event, 'workingDeaddd')
+    if (event.source !== window) {
+        return
+    }
+
+    var message = event.data
+
+    // Only accept messages that we know are ours
+    if (
+        typeof message !== 'object' ||
+        message === null ||
+        (!!message.source && message.source !== 'dataaccessgateway-agent')
+    ) {
+        return
+    }
+    chrome.runtime.sendMessage(message)
+})
+
+chrome.runtime.onMessageExternal.addListener(function (
+    request,
+    sender,
+    sendResponse
+) {
+    console.log(request, sender, sendResponse)
+    if (sender.url === 'blocklistedWebsite') return // don't allow this web page access
+    // if (request.openUrlInEditor) openUrl(request.openUrlInEditor)
+
+    // senderResponse()
+    sendResponse('ok')
+})
+
 chrome.runtime.onMessage.addListener(function (
     message,
     sender,
@@ -39,7 +72,6 @@ chrome.runtime.onMessage.addListener(function (
         showStyles: true,
         contentColor: { r: 155, g: 11, b: 239, a: 0.7 },
     }
-
 
     chrome.debugger.attach({ tabId: tabId }, '1.0', function () {
         chrome?.debugger?.sendCommand({ tabId: tabId }, 'DOM.enable')
@@ -88,6 +120,6 @@ chrome.runtime.onMessage.addListener(function (
     if (message.name === 'message') {
         senderResponse({ text: 'Petter Joe', sender })
 
-        return true 
+        return true
     }
 })
