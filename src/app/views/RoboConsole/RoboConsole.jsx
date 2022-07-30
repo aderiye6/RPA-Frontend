@@ -228,6 +228,8 @@ export default function RoboConsole() {
     const [dataDictAdded, setdataDictAdded] = useState(false)
 
     const textInput = React.useRef(null)
+    const [showHtml, setshowHtml] = useState(false)
+    const [rawHtmlContent, setrawHtmlContent] = useState()
 
     // const history = useHistory();
     const navigate = useNavigate()
@@ -304,17 +306,34 @@ export default function RoboConsole() {
     const [selectedNodeID, setselectedNodeID] = useState()
     const { setViewport } = useReactFlow()
 
-
+    window.addEventListener(
+        'message',
+        (event) => {
+            // We only accept messages from ourselves
+            console.log(event, 'naweeeeeeeeeeeee')
+            if (event.source != window) {
+                return
+            }
+        },
+        false
+    )
 
     const inspectElementExtension = () => {
         setopenBroswerExtension(true)
 
         // The ID of the extension we want to talk to.
         var editorExtensionId = 'abcdefghijklmnoabcdefhijklmnoabc'
-        console.log(chrome,window, 'chromechromechrome')
+        console.log(chrome, window, 'chromechromechrome')
         console.log(window.chrome.runtime, 'sssjs')
-        window.postMessage({ type: "FROM_PAGE", text: "Hello from the webpage!" }, "*");
-        window.postMessage({ source: "dataaccessgateway-agent", payload: "requestInfo" }, "*");
+        window.postMessage(
+            {
+                type: 'FROM_PAGE',
+                text: 'Hello from the webpage!',
+                source: 'dataaccessgateway-agent',
+            },
+            '*'
+        )
+        // window.postMessage({ source: "dataaccessgateway-agent", payload: "requestInfo" }, "*");
         // if(chrome && chrome.runtime && chrome.runtime.sendMessage) {
         //     chrome.runtime.sendMessage(
         //       "abcdefghijklmnoabcdefhijklmnoabc",
@@ -350,6 +369,20 @@ export default function RoboConsole() {
         </div>
     )
 
+    const rawHTML = `
+        <div>
+        <h1>The Second Example</h1>
+        <p>The <strong>rat</strong> hates the <strong>cat</strong></p>
+        <p><i>This is something special</i></p>
+        <hr/>  
+        <div>
+            <img src="https://www.kindacode.com/wp-content/uploads/2021/06/pi-2.jpeg" width="500"/>
+        </div>
+        <hr/>  
+        <h4>Just Another Heading</h4>
+        </div>
+    `
+
     function TextUpdaterNode({ data }) {
         // console.log(data, 'helppppppppppppp')
         const handlePopOverClick = useCallback((evt) => {
@@ -364,16 +397,17 @@ export default function RoboConsole() {
                     <>
                         {' '}
                         <Handle type="target" position={Position.Top} />
-                        <div className="robo_flow_node">
-                            <div>
-                                <label htmlFor="text">{data?.label}</label>
-                            </div>
-                            <Popover content={content} title="">
-                                <div type="">
-                                    <MoreVertOutlined />
+                        <div>
+                            <div className="robo_flow_node">
+                                <div>
+                                    <label htmlFor="text">{data?.label}</label>
                                 </div>
-                            </Popover>
-                            {/* <Button
+                                <Popover content={content} title="">
+                                    <div type="">
+                                        <MoreVertOutlined />
+                                    </div>
+                                </Popover>
+                                {/* <Button
                                 aria-describedby={popid}
                                 variant="contained"
                                 color="primary"
@@ -399,6 +433,16 @@ export default function RoboConsole() {
                                     The content of the Popover.
                                 </Typography>
                             </Popover> */}
+                            </div>
+                            <div style={{overflow: 'scroll', width: '200px', height: '150px', backgroundColor:'#ffffff'}}>
+                                {!showHtml && (
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: rawHTML,
+                                        }}
+                                    ></div>
+                                )}
+                            </div>
                         </div>
                         <Handle
                             type="source"

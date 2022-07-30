@@ -9,8 +9,11 @@ chrome.action.onClicked.addListener(function (tab) {
         onAttach.bind(null, tab.id)
     )
 })
+console.log(chrome, 'bacccccccccccccckg')
+
 
 chrome.debugger.onEvent.addListener(function (source, method, params) {
+    console.log(chrome, 'bacccccccccccccckg')
     console.log(source, method, params, 'huj')
 })
 
@@ -28,9 +31,9 @@ function onAttach(tabId) {
     })
 }
 
-window.addEventListener('message', (event) => {
+chrome?.window?.addEventListener('message', (event) => {
     // Only accept messages from the same frame
-    console.log(event, 'workingDeaddd')
+    console.log(event, 'listingdow')
     if (event.source !== window) {
         return
     }
@@ -61,11 +64,15 @@ chrome.runtime.onMessageExternal.addListener(function (
     sendResponse('ok')
 })
 
+
+
 chrome.runtime.onMessage.addListener(function (
     message,
     sender,
     senderResponse
 ) {
+
+    console.log(message,'kkkkkkk')
     var tabId = sender?.tab?.id
     var hightCfg = {
         showInfo: true,
@@ -75,6 +82,8 @@ chrome.runtime.onMessage.addListener(function (
 
     chrome.debugger.attach({ tabId: tabId }, '1.0', function () {
         chrome?.debugger?.sendCommand({ tabId: tabId }, 'DOM.enable')
+        chrome?.debugger?.sendCommand({ tabId: tabId }, 'Inspector.enable')
+
         chrome?.debugger?.sendCommand({ tabId: tabId }, 'Overlay.enable')
         chrome?.debugger?.onEvent?.addListener(onEvent)
 
@@ -92,13 +101,16 @@ chrome.runtime.onMessage.addListener(function (
             'Runtime.evaluate',
             {
                 expression:
-                    'console.log(document.body); inspect(document.body);',
+                    'console.log(document.body)',
             },
             function () {
                 console.log('Result:', arguments)
             }
         )
 
+
+
+   
         window.addEventListener('unload', function () {
             chrome.debugger.detach({ tabId: tabId })
         })
@@ -108,8 +120,13 @@ chrome.runtime.onMessage.addListener(function (
         })
 
         function onEvent(debuggeeId, message, params) {
-            console.log('onEvent ...' + message, params)
-            if (tabId != debuggeeId.tabId) return
+            console.log('onEvent ...' + message, debuggeeId, params)
+            // if (tabId != debuggeeId.tabId) return
+
+      const doomm =  chrome?.debugger?.sendCommand('DOM.highlightNode')
+       const doom = chrome?.debugger?.sendCommand('DOM.getDocument')
+       console.log(doomm, doom)
+        chrome?.debugger?.sendCommand({ nodeId: params.nodes[0].nodeId }, 'DOM.setInspectedNode')
 
             if (message == 'Network.inspectNodeRequested') {
                 console.log('didupdate')

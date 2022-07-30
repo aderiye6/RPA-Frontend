@@ -1,38 +1,42 @@
 {
-  "name": "Create React App Sample",
-  "description": "Build an Extension!",
-  "version": "1.0",
-  "manifest_version": 3,
-  "devtools_page": "index.html",
-  "icons": { "16": "icon.png",
-           "48": "icon.png",
-          "128": "icon.png" },
-  "action":{
-    "default_popup": "popup.html",
-    "default_title": "the popup"
-  },
-  "background": {
-    "service_worker": "background.js",
-    "type": "module"
-  },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["popup.js"]
-  }],
-  "permissions": ["scripting", "debugger", "tabs", "activeTab", "contextMenus", "storage",  "tabs",  "activeTab"],
-
-  "host_permissions":[
-    "https://*/*",
-    "http://*/*",
-    "<all_urls>"
-  ],
-  "externally_connectable": {
-    "ids": [
-      "jkpbbgjldgddpglnmfpkgmjfeefhpbld",
-      "*"
+    "name": "Robomotion",
+    "description": "Build an Extension!",
+    "version": "1.0",
+    "manifest_version": 3,
+    "devtools_page": "index.html",
+    "icons": { "16": "icon.png", "48": "icon.png", "128": "icon.png" },
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "the popup"
+    },
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["popup.js"]
+        }
     ],
-    "matches": ["https://*.example.com/*", "*://localhost/*", "http://localhost:3000/*", "http://*.localhost:3000/*"]
-  }
+    "permissions": [
+        "scripting",
+        "debugger",
+        "tabs",
+        "activeTab",
+        "contextMenus",
+        "storage",
+        "tabs",
+        "activeTab"
+    ],
+
+    "host_permissions": ["https://*/*", "http://*/*", "<all_urls>"],
+    "externally_connectable": {
+        "ids": ["jkpbbgjldgddpglnmfpkgmjfeefhpbld", "*"],
+        "matches": [
+            "https://*.example.com/*",
+            "*://localhost/*",
+            "http://localhost:3000/*"
+        ]
+    }
 }
-
-

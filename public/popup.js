@@ -7,39 +7,42 @@ var hightCfg = {
     contentColor: { r: 155, g: 11, b: 239, a: 0.7 },
 }
 
-window?.addEventListener('load', function () {
-    chrome?.runtime?.sendMessage({ name: 'message' }, (response) => {
-        tabId = response?.sender?.tab?.id
+// window?.addEventListener('load', function () {
+//     chrome?.runtime?.sendMessage({ name: 'message' }, (response) => {
+//         tabId = response?.sender?.tab?.id
 
-        chrome.debugger.sendCommand(
-            { tabId: tabId },
-            'Overlay.setInspectMode',
-            { mode: 'searchForNode', highlightConfig: hightCfg }
-        )
+//         chrome.debugger.sendCommand(
+//             { tabId: tabId },
+//             'Overlay.setInspectMode',
+//             { mode: 'searchForNode', highlightConfig: hightCfg }
+//         )
 
-        window?.addEventListener('load', function () {
-            chrome?.debugger?.sendCommand({ tabId: tabId }, 'DOM.enable')
-            chrome?.debugger?.sendCommand({ tabId: tabId }, 'Overlay.enable')
-            chrome?.debugger?.onEvent?.addListener(onEvent)
+//         window?.addEventListener('load', function () {
+//             chrome?.debugger?.sendCommand({ tabId: tabId }, 'DOM.enable')
+//             chrome?.debugger?.sendCommand({ tabId: tabId }, 'Overlay.enable')
+//             chrome?.debugger?.onEvent?.addListener(onEvent)
 
-            document
-                ?.getElementById('btn_inspect')
-                ?.addEventListener('click', function () {
-                    chrome.debugger.sendCommand(
-                        { tabId: tabId },
-                        'Overlay.setInspectMode',
-                        { mode: 'searchForNode', highlightConfig: hightCfg }
-                    )
-                })
-        })
-    })
-})
+//             document
+//                 ?.getElementById('btn_inspect')
+//                 ?.addEventListener('click', function () {
+//                     chrome.debugger.sendCommand(
+//                         { tabId: tabId },
+//                         'Overlay.setInspectMode',
+//                         { mode: 'searchForNode', highlightConfig: hightCfg }
+//                     )
+//                 })
+//         })
+//     })
+// })
 
 window?.addEventListener('unload', function () {
     chrome?.debugger?.detach({ tabId: tabId })
 })
 
 chrome?.runtime?.sendMessage({ name: 'message' }, (response) => {
+
+    console.log(response)
+    window.postMessage({ type: "FROM_PAGE", text: response?.sender }, "*");
     tabId = response?.sender?.tab?.id
 
     window?.addEventListener('load', function () {
@@ -92,12 +95,17 @@ function onEvent(debuggeeId, message, params) {
 
 window.addEventListener('message', (event) => {
     // Only accept messages from the same frame
+    console.log('lit')
     console.log(event, 'workingDeaddd')
-    if (event.source !== window) {
-        return
-    }
+    console.log('dskjkjsd')
+    console.log('dskjkjsd', event.data)
+    // if (event.source !== window) {
+    //     return
+    // }
 
     var message = event.data
+
+    console.log(message, 'duell')
 
     // Only accept messages that we know are ours
     if (
@@ -107,5 +115,31 @@ window.addEventListener('message', (event) => {
     ) {
         return
     }
-    chrome.runtime.sendMessage(message)
+    console.log(message, 'duell330')
+    if(message.type === "FROM_PAGE"){
+        console.log(chrome,'enteredd')
+        chrome?.runtime?.sendMessage({ name: 'message' }, (response) => {
+
+            console.log(response, 'fdkjfddjdfkd')
+            window.postMessage({ type: "FROM_EXTENSION_PAGE", text: response?.sender }, "*");
+            // tabId = response?.sender?.tab?.id
+        })
+
+        console.log(chrome,'senttttttttttttttt')
+    }
+   
 })
+
+console.log(window, 'akkkajkka')
+// window?.onmouseenter(function(event) {
+//     event.target.addClass("el-selection");
+// });
+
+// window?.onmouseenter(function(event) {
+//     event.target.removeClass("el-selection");
+// });
+
+// window?.onclick(function(event) {
+//     console.log("selected: ", event.target);
+//     return false;
+// });
