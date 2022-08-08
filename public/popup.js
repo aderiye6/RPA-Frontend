@@ -278,7 +278,7 @@ window.addEventListener('mouseover', function (e) {
     addHighlight(e.target)
     window.addEventListener('click', function (e) {
         // e.preventDefault()
-
+        console.log(e, 'content')
         const returnHTML = onHighLightClick(e.target)
         const innerHtml = returnHTML.innerHTML
         e.stopPropagation()
@@ -293,6 +293,7 @@ window.addEventListener('mouseout', function (e) {
     removeHighlight(e.target)
     window.addEventListener('click', function (e) {
         // e.preventDefault()
+        console.log(e, 'content')
         const returnHTML = onHighLightClick(e.target)
         const innerHtml = returnHTML.innerHTML
         e.stopPropagation()

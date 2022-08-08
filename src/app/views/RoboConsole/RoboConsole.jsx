@@ -233,7 +233,7 @@ export default function RoboConsole() {
     const rawHTML = `
    <div class=""><div class="console_search"> <div class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"><div class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-1hhxce5-MuiInputBase-root-MuiOutlinedInput-root" style="width: 100%; padding-top: 1rem; height: 50px; padding-left: 2px; margin-top: 10px; margin-bottom: 10px;"><input aria-invalid="false" id="standard-bare" placeholder="Search..." type="text" class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd css-136wu1w-MuiInputBase-input-MuiOutlinedInput-input" value=""><button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root" tabindex="0" type="button"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="SearchOutlinedIcon"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg><span class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"></span></button><fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"><legend class="css-hdw1oc"><span class="notranslate">​</span></legend></fieldset></div></div></div><div><div class="function_menu_wrapper"><div class="function_menu_list"><div class="menu_name"><div><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardArrowDownIcon"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path></svg></div>Browser</div></div><div class="sub_menus_functions"><div class="dndnode sub_menu_function" draggable="true">Wait Element</div><div class="dndnode sub_menu_function" draggable="true">Click Element</div></div><div class="function_menu_list"><div class="menu_name"><div><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardArrowRightIcon"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path></svg></div>CSV</div></div></div></div></div>
     `
-    const [showHtml, setshowHtml] = useState(false)
+
     const [rawHtmlContent, setRawHtmlContent] = useState(rawHTML)
     console.log(rawHtmlContent, 'initirawHtmlContent')
     // const history = useHistory();
@@ -351,45 +351,42 @@ export default function RoboConsole() {
         )
     }, [])
 
-    useEffect(() => {}, [showHtml])
+    useEffect(() => {}, [])
 
-
+    //Flow NODE COMPONENT
     function TextUpdaterNode({ data }) {
-        var PseudoHTML
-
-        PseudoHTML = `
+        var PseudoHTML = `
         <div class=""><div class="console_search"> <div class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"><div class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-1hhxce5-MuiInputBase-root-MuiOutlinedInput-root" style="width: 100%; padding-top: 1rem; height: 50px; padding-left: 2px; margin-top: 10px; margin-bottom: 10px;"><input aria-invalid="false" id="standard-bare" placeholder="Search..." type="text" class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd css-136wu1w-MuiInputBase-input-MuiOutlinedInput-input" value=""><button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root" tabindex="0" type="button"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="SearchOutlinedIcon"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg><span class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"></span></button><fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"><legend class="css-hdw1oc"><span class="notranslate">​</span></legend></fieldset></div></div></div><div><div class="function_menu_wrapper"><div class="function_menu_list"><div class="menu_name"><div><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardArrowDownIcon"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path></svg></div>Browser</div></div><div class="sub_menus_functions"><div class="dndnode sub_menu_function" draggable="true">Wait Element</div><div class="dndnode sub_menu_function" draggable="true">Click Element</div></div><div class="function_menu_list"><div class="menu_name"><div><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardArrowRightIcon"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path></svg></div>CSV</div></div></div></div></div>
          `
         const [currentHTML, setcurrentHTML] = useState(PseudoHTML)
-       
+        const [showHtml, setshowHtml] = useState(false)
+
         var manualCheck = true
-     
-        ;(function loop() {
-            setTimeout(async function () {
-             
-                const res = await axios.get('http://localhost:5000/html')
-              
-                if (res?.data.message === true) {
-                    setcurrentHTML(res.data.html)
-                }
 
-                loop()
-            }, 150000)
-        })()
+        // ;(function loop() {
+        //     setTimeout(async function () {
+        //         const res = await axios.get('http://localhost:5000/html')
+
+        //         if (res?.data.message === true) {
+        //             setcurrentHTML(res.data.html)
+        //         }
+
+        //         loop()
+        //     }, 150000)
+        // })()
         useEffect(() => {
-            ;(function loop() {
-                setTimeout(async function () {
-                
-                    const res = await axios.get('http://localhost:5000/html')
-                  
-                    setcurrentHTML(res.data.html)
-                    if (res?.data.message === true) {
-                        setcurrentHTML(res.data.html)
-                    }
+            // ;(function loop() {
+            //     setTimeout(async function () {
+            //         const res = await axios.get('http://localhost:5000/html')
 
-                    loop()
-                }, 300)
-            })()
+            //         setcurrentHTML(res.data.html)
+            //         if (res?.data.message === true) {
+            //             setcurrentHTML(res.data.html)
+            //         }
+
+            //         loop()
+            //     }, 300)
+            // })()
             const channel = new BroadcastChannel('app-data')
             // channel.addEventListener('message', (event) => {
             //     console.log(event.data, 'broadcastllllll')
@@ -436,10 +433,7 @@ export default function RoboConsole() {
                         // console.log(currentHTML, 'currentHTMLcurrentHTML')
                         // console.log(event?.data?.html, 'floowowoowow')
 
-                        if (
-                            manualCheck
-                        ) {
-                         
+                        if (manualCheck) {
                             console.log('IENTER')
                             localStorage.setItem(
                                 'htmlmessage',
@@ -447,9 +441,7 @@ export default function RoboConsole() {
                             )
                             PseudoHTML = event?.data?.html
                             setcurrentHTML(event?.data?.html)
-
                         }
-
                     }
 
                     window.removeEventListener('message', () =>
@@ -492,9 +484,26 @@ export default function RoboConsole() {
 
         console.log(getHTML, 'ajajajaj')
 
+        const pollingHTML = () => {
+            ;(function loop() {
+                setTimeout(async function () {
+                    const res = await axios.get('http://localhost:5000/html')
+                    onOptionInputChangeInit('Selector_Type', 'xpath')
+                    onOptionInputXpathChange('selector', res.data.xpath)
+                    setcurrentHTML(res.data.html)
+                    if (res?.data.message === true) {
+                        setcurrentHTML(res.data.html)
+                    }
+
+                    loop()
+                }, 300)
+            })()
+        }
+
         const inspectElementExtension = useCallback(
             (evt) => {
                 // PseudoHTML = `<div>OKOLI jj  JOHNSON</div>`
+                pollingHTML()
                 setshowHtml(true)
                 setopenBroswerExtension(true)
 
@@ -546,7 +555,9 @@ export default function RoboConsole() {
                 >
                     Inspect Element
                 </div>
-                <div className="elementOver">Hide Preview</div>
+                <div className="elementOver" onClick={() => setshowHtml(false)}>
+                    Hide Preview
+                </div>
             </div>
         )
 
@@ -597,37 +608,24 @@ export default function RoboConsole() {
                                 </Typography>
                             </Popover> */}
                             </div>
-                            <div
-                                style={{
-                                    overflow: 'scroll',
-                                    width: '200px',
-                                    height: '150px',
-                                    backgroundColor: '#ffffff',
-                                }}
-                            >
-                                {/* <input value={PseudoHTML}/>
-                                <input value={PseudoHTML} onChange={onHtmlChange}/> */}
-                                {!showHtml && (
+                            {showHtml && (
+                                <div
+                                    style={{
+                                        overflow: 'scroll',
+                                        width: '200px',
+                                        height: '150px',
+                                        backgroundColor: '#ffffff',
+                                    }}
+                                >
                                     <>
-                                        {' '}
                                         <div
-                                            // onInput={onHtmlChange}
                                             dangerouslySetInnerHTML={{
                                                 __html: `${currentHTML}`,
-                                                // __html: PseudoHTML,
                                             }}
                                         ></div>
-                                        {/* <div
-                                          
-                                            dangerouslySetInnerHTML={{
-                                                // __html: `${  localStorage.getItem('htmlmessage')}`,
-                                                __html: PseudoHTML,
-                                            }}
-                                        ></div> */}
-                                        {/* llllllllllllllll */}
                                     </>
-                                )}
-                            </div>
+                                </div>
+                            )}
                         </div>
                         <Handle
                             type="source"
@@ -665,6 +663,8 @@ export default function RoboConsole() {
     const nodeTypes = useMemo(() => ({ textUpdater: TextUpdaterNode }), [])
 
     useEffect(() => {
+        //Auto fill in the inputs parameters with the default values
+        //BY autoclicking the buttons after load
         if (optionsContainers.current.length !== 0) {
             optionsContainers?.current.map((optionsContainer) => {
                 optionsContainer?.click()
@@ -1114,6 +1114,49 @@ export default function RoboConsole() {
     }
 
     const onOptionInputChangeInit = (name, value) => {
+        setnewChanges(true)
+        setformData((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }))
+
+        const result = nodes?.forEach(function (c_node) {
+            if (c_node.id === selectedNodeID) {
+                const returnValue = { ...c_node }
+
+                returnValue.data = {
+                    ...c_node.data,
+                    input: {
+                        ...c_node.data.input,
+                        [name]: value,
+                    },
+                }
+
+                c_node = returnValue
+
+                setNodes((nds) =>
+                    nds.map((node) => {
+                        if (node.id === c_node.id) {
+                            // it's important that you create a new object here
+                            // in order to notify react flow about the change
+                            node.data = {
+                                ...node.data,
+                                input: {
+                                    ...node.data.input,
+                                    [name.replace(/_/g, '').toLowerCase()]:
+                                        value,
+                                },
+                            }
+                        }
+
+                        return node
+                    })
+                )
+            }
+        })
+    }
+
+    const onOptionInputXpathChange = (name, value) => {
         setnewChanges(true)
         setformData((prevState) => ({
             ...prevState,
@@ -2558,15 +2601,17 @@ export default function RoboConsole() {
                     >
                         <Loader />
                     </div>
+
                     <div
                         style={{ display: 'flex', justifyContent: 'flex-end' }}
                     >
-                        <Button
+                        <b>Press Escape Button to Cancel</b>
+                        {/* <Button
                             style={{ width: 'max-content', cursor: 'pointer' }}
                             onClick={() => setopenBroswerExtension(false)}
                         >
                             Cancel
-                        </Button>
+                        </Button> */}
                     </div>
                 </Box>
             </Modal>
