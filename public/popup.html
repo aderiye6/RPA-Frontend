@@ -5,34 +5,89 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
+        <!-- <script type="text/javascript" src="popup.js"></script> -->
+        <!-- <script
+            type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/across-tabs/1.0.0/across-tabs.min.js"
+        ></script> -->
+        <!-- <script
+            type="text/javascript"
+            src="https://cdn.rawgit.com/vitkarpov/tabs-channel/master/lib/index.js"
+        ></script> -->
+        <!-- <script
+            src="https://raw.github.com/bermi/element-xpath/master/element-xpath.min.js"
+            type="text/javascript"
+        ></script> -->
+        <!-- <script src="popup.js"></script> -->
     </head>
     <style>
-        #container{
+        #container {
             display: flex;
             justify-content: space-around;
             width: 250px;
         }
-        #robo_text{
+        #robo_text {
             text-decoration: underline;
             cursor: pointer;
         }
-        #image_container{
+        #image_container {
             width: 40px;
             height: 40px;
         }
+        .highlighted {
+            /* border: 1px solid red;
+            cursor: default;
+            box-sizing: border-box; */
+            background-color: pink;
+        }
     </style>
     <body>
+        <button id="btn">Click Me!</button>
+
+        <input type="text" id="info" />
         ROBOMOTION
         <div id="container">
             <div id="image_container">
-                <img style="width: 100%; height:100%" src="./logo.png" alt="Logo" />
+                <img
+                    style="width: 100%; height: 100%"
+                    src="./logo.png"
+                    alt="Logo"
+                />
             </div>
-            <div id="robo_text">How to Use</div>
+            <div id="robo_text">
+                <a href="https://www.google.com/"> How to Use</a>
+            </div>
         </div>
+        <iframe
+            id="testFrame"
+            class="test"
+            title="Inline Frame Example"
+            width="50"
+            height="50"
+            src="http://localhost:3000/console/robo_console/"
+        ></iframe>
+        <iframe
+            id="receiver"
+            src="http://localhost:3000"
+            width="50"
+            height="50"
+        >
+            <p>Your browser does not support iframes.</p>
+        </iframe>
 
-        <script src="popup.js"></script>
-        <script src="background.js"></script>
-        <script src="./popup.js"></script>
-        <script src="./background.js"></script>
+        <script type="text/javascript" src="popup.js"></script>
+        <script type="text/javascript" src="./popup.js"></script>
+        <!-- <script src="background.js"></script>
+        <script type="text/javascript" src="crossBrowser.js"></script>
+        <script src="./background.js"></script> -->
+
+        <!-- <script
+            src="https://raw.github.com/bermi/element-xpath/master/element-xpath.min.js"
+            type="text/javascript"
+        ></script> -->
+        <!-- <script
+            type="text/javascript"
+            src="https://cdn.rawgit.com/vitkarpov/tabs-channel/master/lib/index.js"
+        ></script> -->
     </body>
 </html>

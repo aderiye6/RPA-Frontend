@@ -1,0 +1,8 @@
+.el-selection {outline: 1px solid blue;}
+.highlighted
+{
+  /* border:1px solid red;
+  cursor:default;
+  box-sizing:border-box; */
+  background-color: pink;
+}

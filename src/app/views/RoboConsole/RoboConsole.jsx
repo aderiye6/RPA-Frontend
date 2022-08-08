@@ -69,6 +69,7 @@ import { Blocker } from 'history'
 import FlowConsoleArea from './FlowConsoleArea'
 import { MoreVertOutlined } from '@material-ui/icons'
 import Loader from 'app/components/Loadable/Loader'
+import axios from 'axios'
 
 const flowKey = 'example-flow'
 
@@ -228,9 +229,13 @@ export default function RoboConsole() {
     const [dataDictAdded, setdataDictAdded] = useState(false)
 
     const textInput = React.useRef(null)
-    const [showHtml, setshowHtml] = useState(false)
-    const [rawHtmlContent, setrawHtmlContent] = useState()
 
+    const rawHTML = `
+   <div class=""><div class="console_search"> <div class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"><div class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-1hhxce5-MuiInputBase-root-MuiOutlinedInput-root" style="width: 100%; padding-top: 1rem; height: 50px; padding-left: 2px; margin-top: 10px; margin-bottom: 10px;"><input aria-invalid="false" id="standard-bare" placeholder="Search..." type="text" class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd css-136wu1w-MuiInputBase-input-MuiOutlinedInput-input" value=""><button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root" tabindex="0" type="button"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="SearchOutlinedIcon"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg><span class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"></span></button><fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"><legend class="css-hdw1oc"><span class="notranslate">​</span></legend></fieldset></div></div></div><div><div class="function_menu_wrapper"><div class="function_menu_list"><div class="menu_name"><div><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardArrowDownIcon"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path></svg></div>Browser</div></div><div class="sub_menus_functions"><div class="dndnode sub_menu_function" draggable="true">Wait Element</div><div class="dndnode sub_menu_function" draggable="true">Click Element</div></div><div class="function_menu_list"><div class="menu_name"><div><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardArrowRightIcon"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path></svg></div>CSV</div></div></div></div></div>
+    `
+    const [showHtml, setshowHtml] = useState(false)
+    const [rawHtmlContent, setRawHtmlContent] = useState(rawHTML)
+    console.log(rawHtmlContent, 'initirawHtmlContent')
     // const history = useHistory();
     const navigate = useNavigate()
 
@@ -306,94 +311,252 @@ export default function RoboConsole() {
     const [selectedNodeID, setselectedNodeID] = useState()
     const { setViewport } = useReactFlow()
 
-    window.addEventListener(
-        'message',
-        (event) => {
-            // We only accept messages from ourselves
-            console.log(event, 'naweeeeeeeeeeeee')
-            if (event.source != window) {
-                return
-            }
-        },
-        false
-    )
+    useEffect(() => {
+        const channel = new BroadcastChannel('app-data')
+        channel.addEventListener('message', (event) => {
+            console.log(event, 'BroadcastChannelBroadcastChannel')
+        })
+        // window.addEventListener('storage', message_receive)
 
-    const inspectElementExtension = () => {
-        setopenBroswerExtension(true)
+        // function message_receive(ev) {
+        //     if (ev.key == 'message') {
+        //         var message = JSON.parse(ev.newValue)
+        //         console.log(message, 'outerrrrrr')
+        //     }
+        // }
 
-        // The ID of the extension we want to talk to.
-        var editorExtensionId = 'abcdefghijklmnoabcdefhijklmnoabc'
-        console.log(chrome, window, 'chromechromechrome')
-        console.log(window.chrome.runtime, 'sssjs')
-        window.postMessage(
-            {
-                type: 'FROM_PAGE',
-                text: 'Hello from the webpage!',
-                source: 'dataaccessgateway-agent',
+        window.addEventListener(
+            'message',
+            (event) => {
+                // We only accept messages from ourselves
+                console.log(event, 'naweeeeeeeeeeeee')
+
+                if (event?.data?.html) {
+                    console.log(event?.data?.html, 'nammmmmmmmeeeeeeeeeee')
+                    // alert('olllllllllllllllll')
+                    // setRawHtmlContent(event?.data?.html)
+                    // PseudoHTML = event?.data?.html
+                    // PseudoHTML = `
+                    // <div class=""><div class="console_search"> <div class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"><div class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-1hhxce5-MuiInputBase-root-MuiOutlinedInput-root" style="width: 100%; padding-top: 1rem; height: 50px; padding-left: 2px; margin-top: 10px; margin-bottom: 10px;"><input aria-invalid="false" id="standard-bare" placeholder="Search..." type="text" class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd css-136wu1w-MuiInputBase-input-MuiOutlinedInput-input" value=""><button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root" tabindex="0" type="button"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="SearchOutlinedIcon"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg><span class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"></span></button><fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"><legend class="css-hdw1oc"><span class="notranslate">​</span></legend></fieldset></div></div></div><div><div class="function_menu_wrapper"><div class="function_menu_list"><div class="menu_name"><div><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardArrowDownIcon"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path></svg></div>Browser</div></div><div class="sub_menus_functions"><div class="dndnode sub_menu_function" draggable="true">Wait Element</div><div class="dndnode sub_menu_function" draggable="true">Click Element</div></div><div class="function_menu_list"><div class="menu_name"><div><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardArrowRightIcon"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path></svg></div>CSV</div></div></div></div></div>
+                    //  `
+                    // setRawHtmlContent(`${event?.data?.html}`)
+                    // setshowHtml(true)
+                }
+
+                if (event.source != window) {
+                    return
+                }
             },
-            '*'
+            false
         )
-        // window.postMessage({ source: "dataaccessgateway-agent", payload: "requestInfo" }, "*");
-        // if(chrome && chrome.runtime && chrome.runtime.sendMessage) {
-        //     chrome.runtime.sendMessage(
-        //       "abcdefghijklmnoabcdefhijklmnoabc",
-        //       {greeting: "yes"},
-        //       function (response) {
-        //         console.log(response, 'dkldls')
-        //         if (!response.success) console.log('error')
-        //     }
-        //     );
-        //   }
+    }, [])
 
-        // Make a simple request:
+    useEffect(() => {}, [showHtml])
 
-        // chrome.runtime.sendMessage(
-        //     editorExtensionId,
-        //     { openUrlInEditor: 'open' },
-        //     function (response) {
-        //         console.log(response, 'dkldls')
-        //         if (!response.success) console.log('error')
-        //     }
-        // )
-    }
-
-    const content = (
-        <div className="elementOverCont">
-            <div
-                className="elementOver"
-                onClick={() => inspectElementExtension()}
-            >
-                Inspect Element
-            </div>
-            <div className="elementOver">Hide Preview</div>
-        </div>
-    )
-
-    const rawHTML = `
-        <div>
-        <h1>The Second Example</h1>
-        <p>The <strong>rat</strong> hates the <strong>cat</strong></p>
-        <p><i>This is something special</i></p>
-        <hr/>  
-        <div>
-            <img src="https://www.kindacode.com/wp-content/uploads/2021/06/pi-2.jpeg" width="500"/>
-        </div>
-        <hr/>  
-        <h4>Just Another Heading</h4>
-        </div>
-    `
 
     function TextUpdaterNode({ data }) {
-        // console.log(data, 'helppppppppppppp')
-        const handlePopOverClick = useCallback((evt) => {
-            console.log(evt, 'jimmmm')
-            setAnchorEl(true)
-        }, [])
+        var PseudoHTML
+
+        PseudoHTML = `
+        <div class=""><div class="console_search"> <div class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"><div class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-1hhxce5-MuiInputBase-root-MuiOutlinedInput-root" style="width: 100%; padding-top: 1rem; height: 50px; padding-left: 2px; margin-top: 10px; margin-bottom: 10px;"><input aria-invalid="false" id="standard-bare" placeholder="Search..." type="text" class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd css-136wu1w-MuiInputBase-input-MuiOutlinedInput-input" value=""><button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root" tabindex="0" type="button"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="SearchOutlinedIcon"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg><span class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"></span></button><fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"><legend class="css-hdw1oc"><span class="notranslate">​</span></legend></fieldset></div></div></div><div><div class="function_menu_wrapper"><div class="function_menu_list"><div class="menu_name"><div><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardArrowDownIcon"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path></svg></div>Browser</div></div><div class="sub_menus_functions"><div class="dndnode sub_menu_function" draggable="true">Wait Element</div><div class="dndnode sub_menu_function" draggable="true">Click Element</div></div><div class="function_menu_list"><div class="menu_name"><div><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="KeyboardArrowRightIcon"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path></svg></div>CSV</div></div></div></div></div>
+         `
+        const [currentHTML, setcurrentHTML] = useState(PseudoHTML)
+       
+        var manualCheck = true
+     
+        ;(function loop() {
+            setTimeout(async function () {
+             
+                const res = await axios.get('http://localhost:5000/html')
+              
+                if (res?.data.message === true) {
+                    setcurrentHTML(res.data.html)
+                }
+
+                loop()
+            }, 150000)
+        })()
+        useEffect(() => {
+            ;(function loop() {
+                setTimeout(async function () {
+                
+                    const res = await axios.get('http://localhost:5000/html')
+                  
+                    setcurrentHTML(res.data.html)
+                    if (res?.data.message === true) {
+                        setcurrentHTML(res.data.html)
+                    }
+
+                    loop()
+                }, 300)
+            })()
+            const channel = new BroadcastChannel('app-data')
+            // channel.addEventListener('message', (event) => {
+            //     console.log(event.data, 'broadcastllllll')
+            //     onHtmlChange(event.data)
+            // })
+            // window.addEventListener('storage', message_receive)
+
+            // function message_receive(ev) {
+            //     if (ev.key == 'message') {
+            //         var message = JSON.parse(ev.newValue)
+            //         console.log(message, 'sdjssjsj')
+            //     }
+            // }
+
+            chrome?.runtime?.onMessage?.addListener(function (
+                request,
+                sender,
+                sendResponse
+            ) {
+                console.log(request, sender, sendResponse, 'chromiunmmmmmm')
+                if (request.openUrlInEditor)
+                    console.log(request.openUrlInEditor)
+            })
+
+            //   var port = chrome.runtime.connectNative("com.vizibit.test");
+
+            //   port.onMessage.addListener(function (msg) {
+            //     enterName(msg.data);
+
+            window.addEventListener(
+                'message',
+                (event) => {
+                    // alert('olllllllllllllllll')
+                    if (event?.data?.html) {
+                        // alert('olllllllllllllllll')
+                        const getStore = localStorage.getItem('message')
+                        console.log(event, 'eventeventeventevent')
+
+                        // // currentHTML
+                        console.log(
+                            manualCheck,
+                            'manualCheckmanualCheckmanualCheck'
+                        )
+                        // console.log(currentHTML, 'currentHTMLcurrentHTML')
+                        // console.log(event?.data?.html, 'floowowoowow')
+
+                        if (
+                            manualCheck
+                        ) {
+                         
+                            console.log('IENTER')
+                            localStorage.setItem(
+                                'htmlmessage',
+                                event?.data?.html
+                            )
+                            PseudoHTML = event?.data?.html
+                            setcurrentHTML(event?.data?.html)
+
+                        }
+
+                    }
+
+                    window.removeEventListener('message', () =>
+                        console.log('listeneventremoved')
+                    )
+
+                    if (event.source != window) {
+                        return
+                    }
+                },
+                false
+            )
+            // setcurrentHTML(rawHtmlContent)
+
+            return () => {
+                window.removeEventListener('message', () =>
+                    console.log('listeneventremoved')
+                )
+            }
+        }, [currentHTML, rawHtmlContent, PseudoHTML])
+
+        const onHtmlChange = useCallback(
+            (evt) => {
+                console.log(evt, 'jimmmm')
+                PseudoHTML = evt
+                setcurrentHTML(evt)
+            },
+            [PseudoHTML, currentHTML]
+        )
+
+        const getHTML = (function holdHTMLCont() {
+            var PseudoHTML = 'PseudoHTML'
+            function getHTML() {
+                // return PseudoHTML
+                console.log(PseudoHTML)
+            }
+
+            return getHTML
+        })()
+
+        console.log(getHTML, 'ajajajaj')
+
+        const inspectElementExtension = useCallback(
+            (evt) => {
+                // PseudoHTML = `<div>OKOLI jj  JOHNSON</div>`
+                setshowHtml(true)
+                setopenBroswerExtension(true)
+
+                // The ID of the extension we want to talk to.
+                var editorExtensionId = 'abcdefghijklmnoabcdefhijklmnoabc'
+                console.log(chrome, window, 'chromechromechrome')
+                console.log(window.chrome.runtime, 'sssjs')
+
+                window.postMessage(
+                    {
+                        type: 'FROM_PAGE',
+                        text: 'Hello from the webpage!',
+                        source: 'dataaccessgateway-agent',
+                    },
+                    '*'
+                )
+
+                // window.postMessage({ source: "dataaccessgateway-agent", payload: "requestInfo" }, "*");
+                // if(chrome && chrome.runtime && chrome.runtime.sendMessage) {
+                //     chrome.runtime.sendMessage(
+                //       "abcdefghijklmnoabcdefhijklmnoabc",
+                //       {greeting: "yes"},
+                //       function (response) {
+                //         console.log(response, 'dkldls')
+                //         if (!response.success) console.log('error')
+                //     }
+                //     );
+                //   }
+
+                // Make a simple request:
+
+                // chrome.runtime.sendMessage(
+                //     editorExtensionId,
+                //     { openUrlInEditor: 'open' },
+                //     function (response) {
+                //         console.log(response, 'dkldls')
+                //         if (!response.success) console.log('error')
+                //     }
+                // )
+            },
+            [PseudoHTML]
+        )
+
+        const content = (
+            <div className="elementOverCont">
+                <div
+                    className="elementOver"
+                    onClick={() => inspectElementExtension()}
+                >
+                    Inspect Element
+                </div>
+                <div className="elementOver">Hide Preview</div>
+            </div>
+        )
+
+        console.log(PseudoHTML, currentHTML, 'myooooooooowwwwwwwwnn')
 
         return (
             <>
                 {/* <Handle type="target" position={Position.Left} /> */}
-                {data?.label === 'Click Element' && (
+                {(data?.label === 'Click Element' ||
+                    data?.label === 'Wait Element') && (
                     <>
                         {' '}
                         <Handle type="target" position={Position.Top} />
@@ -434,13 +597,35 @@ export default function RoboConsole() {
                                 </Typography>
                             </Popover> */}
                             </div>
-                            <div style={{overflow: 'scroll', width: '200px', height: '150px', backgroundColor:'#ffffff'}}>
+                            <div
+                                style={{
+                                    overflow: 'scroll',
+                                    width: '200px',
+                                    height: '150px',
+                                    backgroundColor: '#ffffff',
+                                }}
+                            >
+                                {/* <input value={PseudoHTML}/>
+                                <input value={PseudoHTML} onChange={onHtmlChange}/> */}
                                 {!showHtml && (
-                                    <div
-                                        dangerouslySetInnerHTML={{
-                                            __html: rawHTML,
-                                        }}
-                                    ></div>
+                                    <>
+                                        {' '}
+                                        <div
+                                            // onInput={onHtmlChange}
+                                            dangerouslySetInnerHTML={{
+                                                __html: `${currentHTML}`,
+                                                // __html: PseudoHTML,
+                                            }}
+                                        ></div>
+                                        {/* <div
+                                          
+                                            dangerouslySetInnerHTML={{
+                                                // __html: `${  localStorage.getItem('htmlmessage')}`,
+                                                __html: PseudoHTML,
+                                            }}
+                                        ></div> */}
+                                        {/* llllllllllllllll */}
+                                    </>
                                 )}
                             </div>
                         </div>
@@ -452,24 +637,25 @@ export default function RoboConsole() {
                     </>
                 )}
 
-                {data?.label !== 'Click Element' && (
-                    <>
-                        <Handle type="target" position={Position.Top} />
-                        <div className="robo_flow_node">
-                            <div>
-                                <label htmlFor="text">{data?.label}</label>
-                            </div>
-                            {/* <div onClick={onClick}>
+                {data?.label !== 'Click Element' &&
+                    data?.label !== 'Wait Element' && (
+                        <>
+                            <Handle type="target" position={Position.Top} />
+                            <div className="robo_flow_node">
+                                <div>
+                                    <label htmlFor="text">{data?.label}</label>
+                                </div>
+                                {/* <div onClick={onClick}>
                                 <MoreVertOutlined />{' '}
                             </div> */}
-                        </div>
-                        <Handle
-                            type="source"
-                            position={Position.Bottom}
-                            id="a"
-                        />
-                    </>
-                )}
+                            </div>
+                            <Handle
+                                type="source"
+                                position={Position.Bottom}
+                                id="a"
+                            />
+                        </>
+                    )}
 
                 {/* <Handle type="source" position={Position.Bottom} id="b" style={handleStyle} /> */}
             </>
