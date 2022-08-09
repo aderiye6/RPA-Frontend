@@ -19,6 +19,8 @@ import Typography from '@mui/material/Typography'
 import { ValidatorForm } from 'react-material-ui-form-validator'
 import { TextValidator } from 'react-material-ui-form-validator'
 import './index.css'
+import { timeZones } from '../../../../timeZones'
+
 import {
     createTrigger,
     getFlows,
@@ -26,7 +28,10 @@ import {
     retrieveFlowData,
 } from 'app/AppServices/apiService/Services'
 import Loader from 'app/components/Loadable/Loader'
-import { notification } from 'antd'
+import { notification, Tabs } from 'antd'
+const { TabPane } = Tabs
+
+
 
 const ContentBox = styled('div')(({ theme }) => ({
     margin: '30px',
@@ -56,16 +61,34 @@ const style = {
 }
 
 
+
+const scheduleStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 650,
+    height: 'max-content',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    borderTopLeftRadius: '10px',
+    borderTopRightRadius: '10px',
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+    p: 2,
+}
 const addRobotStlye = {
     display: 'flex',
     alignItems: 'center',
     // height:'50%'
 }
 
-
 export default function Search(props) {
     const { action, inviteUserModalSetter, isUser } = props
     const [openModal, setopenModal] = useState(false)
+    const [openScheduleModal, setopenScheduleModal] = useState(false)
     const [age, setAge] = React.useState('')
     const [triggerStage2, settriggerStage2] = useState(false)
     const [robotData, setrobotData] = useState()
@@ -91,7 +114,7 @@ export default function Search(props) {
     const [selected, setselected] = useState()
 
     const countries = [
-        { id: '1', name: 'File System', value:'FILE_SYSTEM' },
+        { id: '1', name: 'File System', value: 'FILE_SYSTEM' },
         // { id: '2', name: 'Mail' },
         // { id: '3', name: 'HTTP' },
     ]
@@ -237,22 +260,63 @@ export default function Search(props) {
             },
         }
 
-    
-
         try {
             const res = await createTrigger(data)
-            setopenModal(false) 
+            setopenModal(false)
             notification.success({
-                message:'success',
-                description: res?.data?.msg || "trigger created"
+                message: 'success',
+                description: res?.data?.msg || 'trigger created',
             })
             setloading(false)
             console.log(res)
         } catch (err) {
+            console.log(err, 'sksdkskskskks')
             setloading(false)
             setmessage(err?.response?.data?.msg)
-      
+            notification.error({
+                message: 'error',
+                description: err?.response?.data?.msg || 'Action could not be completed',
+            })
         }
+    }
+
+
+
+    const createScheduleAction = async () => {
+        setloading(true)
+        setloading(false)
+        // const data = {
+        //     name: ProjectName,
+        //     description: ProjectDescription,
+        //     robot_id: robotID,
+        //     flow_id: flowID,
+        //     flow_version: selectedFlowVersion,
+        //     trigger_type: triggerType,
+        //     trigger_item: triggerItem,
+        //     trigger_properties: {
+        //         directory: directoryPath,
+        //         file_name: fileName,
+        //     },
+        // }
+
+        // try {
+        //     const res = await createTrigger(data)
+        //     setopenModal(false)
+        //     notification.success({
+        //         message: 'success',
+        //         description: res?.data?.msg || 'trigger created',
+        //     })
+        //     setloading(false)
+        //     console.log(res)
+        // } catch (err) {
+        //     console.log(err, 'sksdkskskskks')
+        //     setloading(false)
+        //     setmessage(err?.response?.data?.msg)
+        //     notification.error({
+        //         message: 'error',
+        //         description: err?.response?.data?.msg || 'Action could not be completed',
+        //     })
+        // }
     }
 
     const onSelectflowChange = async (value) => {
@@ -267,7 +331,7 @@ export default function Search(props) {
     }
 
     return (
-        <div style={{ backgroundColor: 'red' }}>
+        <div style={{ backgroundColor: '' }}>
             <Fragment>
                 <Box
                     sx={{
@@ -354,7 +418,9 @@ export default function Search(props) {
                             onClick={() => {
                                 isUser
                                     ? inviteUserModalSetter(true)
-                                    : setopenModal(true)
+                                    : action == 'Add Trigger'
+                                    ? setopenModal(true)
+                                    : setopenScheduleModal(true)
                             }}
                             variant="contained"
                             startIcon={<UploadFile />}
@@ -387,8 +453,7 @@ export default function Search(props) {
                                 New Trigger
                             </div>
                         </Typography>
-                        <div style={{color:'red'}}>{message}</div>
-                        
+                        <div style={{ color: 'red' }}>{message}</div>
 
                         <div
                             container
@@ -795,20 +860,23 @@ export default function Search(props) {
                                                                     : 'gray',
                                                         }}
                                                         disabled={
-                                                           ( (flowID ===
-                                                                undefined) &&
-                                                            (robotID ===
-                                                                undefined) &&
-                                                            (selectedFlowVersion ===
-                                                                undefined) &&
-                                                            (ProjectName ===
-                                                                undefined) &&
-                                                           ( ProjectDescription ===
-                                                                undefined))
+                                                            flowID ===
+                                                                undefined &&
+                                                            robotID ===
+                                                                undefined &&
+                                                            selectedFlowVersion ===
+                                                                undefined &&
+                                                            ProjectName ===
+                                                                undefined &&
+                                                            ProjectDescription ===
+                                                                undefined
                                                         }
                                                     >
-                                                        {loading? <Loader/> : "Create"}
-                                                
+                                                        {loading ? (
+                                                            <Loader />
+                                                        ) : (
+                                                            'Create'
+                                                        )}
                                                     </Button>
                                                 </Box>
                                             </Box>
@@ -817,6 +885,257 @@ export default function Search(props) {
                                 </>
                             )}
                         </div>
+                    </Box>
+                </Modal>
+
+                {/* ///////////////////////// */}
+                <Modal
+                    open={openScheduleModal}
+                    onClose={() => setopenScheduleModal(false)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={scheduleStyle}>
+                        <Typography
+                            id="modal-modal-title"
+                            variant="h6"
+                            component="h2"
+                        >
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'flex-start',
+                                    marginBottom: '2rem',
+                                    width: '100%',
+                                }}
+                            >
+                                New Schedule
+                            </div>
+                        </Typography>
+                        <div style={{ color: 'red' }}>{message}</div>
+
+                        <>
+                            <div>
+                                <div className="trigger_modal">
+                                    <div style={{color:'red'}} >{message}</div>
+                                    <Box className="">
+                                        <Box>
+                                            {' '}
+                                            <Input
+                                                size="large"
+                                                placeholder="Name *"
+                                                style={{
+                                                    width: '100%',
+                                                    height: 40,
+                                                }}
+                                                onChange={(e) =>
+                                                    setprojectName(
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                        </Box>
+                                    </Box>
+                                </div>
+                                <div>
+                                    <select
+                                        style={{
+                                            width: '100%',
+                                            height: '40px',
+                                        }}
+                                        id="ddlStates"
+                                        className="form-control select-class"
+                                        onChange={(e) =>
+                                            onSelectflowChange(e.target.value)
+                                        }
+                                    >
+                                        <option value="0">Select flow</option>
+                                        {flowsData && flowsData !== undefined
+                                            ? flowsData.map((ctr, index) => {
+                                                  return (
+                                                      <option
+                                                          key={index}
+                                                          value={ctr.id}
+                                                      >
+                                                          {ctr.name}
+                                                      </option>
+                                                  )
+                                              })
+                                            : 'No State'}
+                                    </select>
+                                </div>
+                                <div>
+                                    <select
+                                        style={{
+                                            width: '100%',
+                                            height: '40px',
+                                            margin: '1rem 0',
+                                        }}
+                                        id="ddlStates"
+                                        className="form-control select-class"
+                                        onChange={(e) =>
+                                            setselectedFlowVersion(
+                                                e.target.value
+                                            )
+                                        }
+                                    >
+                                        <option value="0">
+                                            Select Version
+                                        </option>
+                                        {flowVersions &&
+                                        flowVersions !== undefined
+                                            ? flowVersions.map((ctr, index) => {
+                                                  return (
+                                                      <option
+                                                          key={index}
+                                                          value={ctr.version}
+                                                      >
+                                                          {ctr.version}
+                                                      </option>
+                                                  )
+                                              })
+                                            : 'No State'}
+                                    </select>
+                                </div>
+                                {/* ///timezone */}
+                                <div style={{marginBottom: '1rem'}}>
+                                    <select
+                                        style={{
+                                            width: '100%',
+                                            height: '40px',
+                                        }}
+                                        id="ddlStates"
+                                        className="form-control select-class"
+                                        onChange={(e) =>
+                                            onSelectflowChange(e.target.value)
+                                        }
+                                    >
+                                        <option value="0">
+                                            Select Timezone
+                                        </option>
+                                        {flowsData && flowsData !== undefined
+                                            ? timeZones.map((ctr, index) => {
+                                                  return (
+                                                      <option
+                                                          key={index}
+                                                          value={ctr.abbr}
+                                                      >
+                                                          {ctr.text}
+                                                      </option>
+                                                  )
+                                              })
+                                            : 'No State'}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <select
+                                        style={{
+                                            width: '100%',
+                                            height: '40px',
+                                        }}
+                                        id="ddlStates"
+                                        className="form-control select-class"
+                                        onChange={(e) =>
+                                            setrobotID(e.target.value)
+                                        }
+                                    >
+                                        <option value="0">Select Robot</option>
+                                        {robotData && robotData !== undefined
+                                            ? robotData.map((ctr, index) => {
+                                                  return (
+                                                      <option
+                                                          key={index}
+                                                          value={ctr.id}
+                                                      >
+                                                          {ctr.name}
+                                                      </option>
+                                                  )
+                                              })
+                                            : 'No State'}
+                                    </select>
+                                </div>
+
+                               
+
+                                <Tabs defaultActiveKey='0' style={{marginTop:'2rem'}}>
+                                    <TabPane tab={`MINUTES`} key={`0`}>
+                                        MINUTES
+                                    </TabPane>
+                                    <TabPane tab={`HOURLY`} key={`1`}>
+                                        HOURLY
+                                    </TabPane>
+                                    <TabPane tab={`DAILY`} key={`2`}>
+                                        DAILY
+                                    </TabPane>
+                                    <TabPane tab={`WEEKLY`} key={`3`}>
+                                        WEEKLY
+                                    </TabPane>
+                                    <TabPane tab={`MONTHLY`} key={`4`}>
+                                        MONTHLY
+                                    </TabPane>
+                                    <TabPane tab={`ADVANCED`} key={`5`}>
+                                        ADVANCED
+                                    </TabPane>
+                                </Tabs>
+
+                                <div>
+                                    <Box className="create_robot_div">
+                                        <Box
+                                            style={{
+                                                marginLeft: '1rem',
+                                                marginRight: '1rem',
+                                            }}
+                                            className=""
+                                        >
+                                            <Button
+                                                onClick={() => {
+                                                    setopenScheduleModal(false)
+                                                }}
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </Box>
+                                        <Box className="">
+                                            <Button
+                                                onClick={() =>
+                                                    createScheduleAction()
+                                                }
+                                                style={{
+                                                    Color:
+                                                        flowID === undefined &&
+                                                        robotID === undefined &&
+                                                        selectedFlowVersion ===
+                                                            undefined &&
+                                                        ProjectName ===
+                                                            undefined &&
+                                                        ProjectDescription ===
+                                                            undefined
+                                                            ? 'blue'
+                                                            : 'gray',
+                                                }}
+                                                disabled={
+                                                    flowID === undefined &&
+                                                    robotID === undefined &&
+                                                    selectedFlowVersion ===
+                                                        undefined &&
+                                                    ProjectName === undefined &&
+                                                    ProjectDescription ===
+                                                        undefined
+                                                }
+                                            >
+                                                {loading ? (
+                                                    <Loader />
+                                                ) : (
+                                                    'Create'
+                                                )}
+                                            </Button>
+                                        </Box>
+                                    </Box>
+                                </div>
+                            </div>
+                        </>
                     </Box>
                 </Modal>
             </Fragment>

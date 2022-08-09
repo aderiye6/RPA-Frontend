@@ -19,11 +19,11 @@ export const navigations = [
         path: '/dashboard/triggers',
         icon: 'Group.png',
     },
-    // {
-    //     name: 'Schedules',
-    //     path: '/dashboard/schedules',
-    //     icon: 'schedule.png',
-    // },
+    {
+        name: 'Schedules',
+        path: '/dashboard/schedules',
+        icon: 'schedule.png',
+    },
     // {
     //     name: 'Queues',
     //     path: '/dashboard/queues',
